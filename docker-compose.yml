@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: hls_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads:/app/uploads
+      - converted:/app/converted
+    environment:
+      - UPLOADS_DIR=/app/uploads
+      - CONVERTED_DIR=/app/converted
+
+  frontend:
+    build: ./frontend
+    container_name: hls_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://localhost:8000
+
+volumes:
+  uploads:
+  converted:
